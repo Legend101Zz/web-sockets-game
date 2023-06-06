@@ -7,14 +7,30 @@
     <title>Client</title>
   </head>
   <body>
-    <h1>Here</h1>
+    <h1>Ball Game</h1>
+
+    <button id="btnCreate">New Game</button>
     <script>
+      let clientId = null;
+
       let ws = new WebSocket("ws://localhost:8080");
+
+      const bnCreate = document.getElementById("btnCreate");
+      bnCreate.addEventListener("click", (e) => {
+        const payLoad = {
+          method: "create",
+          clientId: clientId,
+        };
+        ws.send(JSON.stringify(payLoad));
+      });
       ws.onmessage = (message) => {
         //message data
 
         const response = JSON.parse(message.data);
-        console.log(response);
+        if (response.method === "connect") {
+          clientId = response.clientId;
+          console.log("client Id set successfully ", clientId);
+        }
       };
     </script>
   </body>
