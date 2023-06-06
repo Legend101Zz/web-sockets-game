@@ -27,7 +27,14 @@
         //message data
 
         const response = JSON.parse(message.data);
+
+        //connect
         if (response.method === "connect") {
+          clientId = response.clientId;
+          console.log("client Id set successfully ", clientId);
+        }
+        //create
+        if (response.method === "create") {
           clientId = response.clientId;
           console.log("client Id set successfully ", clientId);
         }

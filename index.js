@@ -14,7 +14,7 @@ const webSocketServer = require("websocket").server;
 const httpServer = http.createServer();
 
 const clients = {};
-
+const games = {};
 httpServer.listen(8080, () => {
   console.log("started server");
 });
@@ -37,6 +37,21 @@ wsServer.on("request", (request) => {
     const result = JSON.parse(message.utf8Data);
     //I have recieved a message from the client
     console.log(result);
+    //user wants to create a new game
+    if (result.method === "create") {
+      const clientId = result.clientId;
+      const gameId = guid();
+      games[gameId] = {
+        id: gameId,
+        balls: 20,
+      };
+      const payLoad = {
+        method: "create",
+        game: games[gameId],
+      };
+      const connection = clients[clientId].connection;
+      connection.send(JSON.stringify(payLoad));
+    }
   });
 
   //generate a new clientID
